@@ -76,6 +76,20 @@ python bot.py
 | `MUNO_RANDOM_REPLY_RATE` | 0.15 | メンション無しでも口を挟む確率 |
 | `MUNO_MARKOV_MIN_LEN` | 6 | これ未満の生成は LLM に助けを求める |
 
+## コマンド
+
+Discord 上では接頭辞 `!muno` でボットを操作できる（`!muno help` で一覧）。
+
+| コマンド | 説明 |
+|---|---|
+| `!muno help` / `ping` / `stats` | ヘルプ / 生存確認 / 学習状況 |
+| `!muno say` | お題なしでひとこと生成 |
+| `!muno teach <文>` | 指定文を学習させる |
+| `!muno mute` / `unmute` | このチャンネルでの自発発言を停止 / 再開（要・管理権限） |
+| `!muno forget` | 学習データを全消去（要・管理権限） |
+
+詳細は [docs/COMMANDS.md](docs/COMMANDS.md) を参照。
+
 ## アイコン
 
 CRT ターミナル風のアプリアイコン（512×512 PNG）を `assets/` に同梱。

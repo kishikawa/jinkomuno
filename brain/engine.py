@@ -55,6 +55,23 @@ class Engine:
             return persona.flavor(generated_reply)
         return random.choice(_FALLBACK_LINES)
 
+    def teach(self, text: str) -> None:
+        """テキストを明示的に学習させる（応答は返さない）。"""
+        text = text.strip()
+        if text:
+            self.markov.learn(text)
+
+    def generate(self) -> str:
+        """お題なしでひとこと生成する。生成できなければ捨て台詞。"""
+        generated_reply = self.markov.reply("")
+        if generated_reply:
+            return persona.flavor(generated_reply)
+        return random.choice(_FALLBACK_LINES)
+
+    def reset(self) -> None:
+        """学習データを全消去する。"""
+        self.storage.clear()
+
     @property
     def vocab_size(self) -> int:
         """学習済み語彙量の指標（3-gram 総数）。"""

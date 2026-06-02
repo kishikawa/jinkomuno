@@ -108,3 +108,9 @@ class Storage:
         with self._lock:
             cursor = self._connection.execute("SELECT COUNT(*) FROM trigram")
             return cursor.fetchone()[0]
+
+    def clear(self) -> None:
+        """学習データを全消去する（記憶のリセット）。"""
+        with self._lock, self._connection:
+            self._connection.execute("DELETE FROM trigram")
+            self._connection.execute("DELETE FROM keyword_start")
