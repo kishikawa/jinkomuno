@@ -102,3 +102,10 @@ cd assets && qlmanage -t -s 512 -o . icon-green.svg && mv icon-green.svg.png ico
 - **口調を変える** → `data/seed_dictionary.json` の応答文と `brain/persona.py` の語尾リストを編集
 - **賢さの調整** → `MUNO_MARKOV_MIN_LEN` を上げると LLM 依存↑、下げるとマルコフ純度↑（＝より無能でカオス）
 - **おしゃべり度** → `MUNO_RANDOM_REPLY_RATE` で勝手に喋る頻度を調整
+
+## 規約
+
+本ボットを公開・運用する際は、以下を参照してください（サンプルにつき運用形態に合わせて加筆推奨）。
+
+- [利用規約](TERMS.md)
+- [プライバシーポリシー](PRIVACY.md)
