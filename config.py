@@ -33,9 +33,9 @@ RANDOM_REPLY_RATE = _read_float("MUNO_RANDOM_REPLY_RATE", 0.15)
 # マルコフ生成がこの文字数未満なら LLM フォールバックを試みる。
 MARKOV_MIN_LEN = _read_int("MUNO_MARKOV_MIN_LEN", 6)
 
-# 学習データの保存先。
+# 学習データの保存先。テスト等では MUNO_BRAIN_DB で別ファイルに差し替えられる。
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
-BRAIN_DB = os.path.join(DATA_DIR, "brain.sqlite3")
+BRAIN_DB = os.getenv("MUNO_BRAIN_DB") or os.path.join(DATA_DIR, "brain.sqlite3")
 SEED_DICT = os.path.join(DATA_DIR, "seed_dictionary.json")
 
 # LLM フォールバックが使えるか。
