@@ -75,19 +75,22 @@ python bot.py
 | `MUNO_NAME` | ムノ | キャラ名 |
 | `MUNO_RANDOM_REPLY_RATE` | 0.15 | メンション無しでも口を挟む確率 |
 | `MUNO_MARKOV_MIN_LEN` | 6 | これ未満の生成は LLM に助けを求める |
+| `MUNO_GUILD_ID` | 空 | 指定するとそのサーバー限定でスラッシュコマンドを即時同期 |
 
 ## コマンド
 
-Discord 上では接頭辞 `!muno` でボットを操作できる（`!muno help` で一覧）。
+Discord 上ではスラッシュコマンド `/muno ...`（UI に候補が出る）か、
+テキスト `!muno ...` でボットを操作できる。どちらも同じ機能。
 
 | コマンド | 説明 |
 |---|---|
-| `!muno help` / `ping` / `stats` | ヘルプ / 生存確認 / 学習状況 |
-| `!muno say` | お題なしでひとこと生成 |
-| `!muno teach <文>` | 指定文を学習させる |
-| `!muno mute` / `unmute` | このチャンネルでの自発発言を停止 / 再開（要・管理権限） |
-| `!muno forget` | 学習データを全消去（要・管理権限） |
+| `/muno help` / `ping` / `stats` | ヘルプ / 生存確認 / 学習状況 |
+| `/muno say` | お題なしでひとこと生成 |
+| `/muno teach text:<文>` | 指定文を学習させる |
+| `/muno mute` / `unmute` | このチャンネルでの自発発言を停止 / 再開（要・管理権限） |
+| `/muno forget` | 学習データを全消去（要・管理権限） |
 
+スラッシュコマンドの初回反映には同期が必要（`MUNO_GUILD_ID` 設定で即時反映）。
 詳細は [docs/COMMANDS.md](docs/COMMANDS.md) を参照。
 
 ## アイコン

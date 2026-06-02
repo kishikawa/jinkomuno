@@ -45,12 +45,13 @@ class CommandRouter:
         return channel_id in self.muted_channels
 
     def handle(self, text: str, channel_id: int, is_admin: bool) -> str:
-        """コマンドを実行し、応答文字列を返す。"""
+        """`!muno ...` 形式のテキストを解釈して実行し、応答を返す。"""
         body = text.strip()[len(PREFIX):].strip()
         name, _, argument = body.partition(" ")
-        name = name.lower() or "help"
-        argument = argument.strip()
+        return self.execute(name.lower() or "help", argument.strip(), channel_id, is_admin)
 
+    def execute(self, name: str, argument: str, channel_id: int, is_admin: bool) -> str:
+        """コマンド名と引数から応答を組み立てる（テキスト/スラッシュ共通）。"""
         if name in _ADMIN_COMMANDS and not is_admin:
             return "は？権限ないでしょ。管理者にでも言って"
 

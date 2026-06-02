@@ -8,8 +8,9 @@ import asyncio
 import random
 
 import discord
+from discord import app_commands
 
-from config import DISCORD_TOKEN, RANDOM_REPLY_RATE, BOT_NAME, LLM_ENABLED
+from config import DISCORD_TOKEN, RANDOM_REPLY_RATE, BOT_NAME, LLM_ENABLED, GUILD_ID
 from brain.engine import Engine
 from brain.commands import CommandRouter
 
@@ -17,22 +18,98 @@ intents = discord.Intents.default()
 intents.message_content = True  # 発言を読んで学習するために必須（Portal でも要有効化）。
 
 client = discord.Client(intents=intents)
+tree = app_commands.CommandTree(client)
 engine = Engine()
 router = CommandRouter(engine)
 
 
 @client.event
 async def on_ready() -> None:
+    # スラッシュコマンドを同期する。GUILD_ID 指定時はそのギルド限定で即時反映。
+    if GUILD_ID:
+        guild = discord.Object(id=GUILD_ID)
+        tree.copy_global_to(guild=guild)
+        synced = await tree.sync(guild=guild)
+    else:
+        synced = await tree.sync()
     llm_state = "ON" if LLM_ENABLED else "OFF"
-    print(f"[{BOT_NAME}] ログイン: {client.user}  (語彙 {engine.vocab_size} / LLM {llm_state})")
+    print(
+        f"[{BOT_NAME}] ログイン: {client.user}  "
+        f"(語彙 {engine.vocab_size} / LLM {llm_state} / スラッシュ {len(synced)}個)"
+    )
+
+
+def _permissions_admin(permissions) -> bool:
+    """権限オブジェクトが管理権限を含むか。"""
+    if permissions is None:
+        return False
+    return permissions.administrator or permissions.manage_guild
 
 
 def is_admin(message: discord.Message) -> bool:
     """発言者がサーバーの管理権限を持つか（DM 等では False）。"""
-    permissions = getattr(message.author, "guild_permissions", None)
-    if permissions is None:
-        return False
-    return permissions.administrator or permissions.manage_guild
+    return _permissions_admin(getattr(message.author, "guild_permissions", None))
+
+
+def interaction_is_admin(interaction: discord.Interaction) -> bool:
+    """スラッシュコマンドの実行者が管理権限を持つか。"""
+    return _permissions_admin(getattr(interaction.user, "guild_permissions", None))
+
+
+async def _run_slash(interaction: discord.Interaction, name: str, argument: str = "") -> None:
+    """スラッシュコマンドを CommandRouter で実行して応答する。"""
+    reply = await asyncio.to_thread(
+        router.execute, name, argument, interaction.channel_id, interaction_is_admin(interaction)
+    )
+    await interaction.response.send_message(reply)
+
+
+# /muno グループ。サブコマンドとしてテキスト版と同じ操作を提供する。
+muno_group = app_commands.Group(name="muno", description=f"人工無能{BOT_NAME}の操作")
+
+
+@muno_group.command(name="help", description="コマンド一覧を表示する")
+async def slash_help(interaction: discord.Interaction) -> None:
+    await _run_slash(interaction, "help")
+
+
+@muno_group.command(name="ping", description="生きてるか確認する")
+async def slash_ping(interaction: discord.Interaction) -> None:
+    await _run_slash(interaction, "ping")
+
+
+@muno_group.command(name="stats", description="学習状況を表示する")
+async def slash_stats(interaction: discord.Interaction) -> None:
+    await _run_slash(interaction, "stats")
+
+
+@muno_group.command(name="say", description="お題なしでひとこと生成する")
+async def slash_say(interaction: discord.Interaction) -> None:
+    await _run_slash(interaction, "say")
+
+
+@muno_group.command(name="teach", description="言葉を仕込む")
+@app_commands.describe(text="覚えさせたい文")
+async def slash_teach(interaction: discord.Interaction, text: str) -> None:
+    await _run_slash(interaction, "teach", text)
+
+
+@muno_group.command(name="mute", description="このチャンネルで自発発言を止める（要・管理権限）")
+async def slash_mute(interaction: discord.Interaction) -> None:
+    await _run_slash(interaction, "mute")
+
+
+@muno_group.command(name="unmute", description="自発発言を再開する（要・管理権限）")
+async def slash_unmute(interaction: discord.Interaction) -> None:
+    await _run_slash(interaction, "unmute")
+
+
+@muno_group.command(name="forget", description="学習データを全消去する（要・管理権限）")
+async def slash_forget(interaction: discord.Interaction) -> None:
+    await _run_slash(interaction, "forget")
+
+
+tree.add_command(muno_group)
 
 
 def should_reply(message: discord.Message) -> bool:

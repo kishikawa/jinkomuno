@@ -25,6 +25,10 @@ def _read_int(key: str, default: int) -> int:
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN", "")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 
+# 指定すると、そのギルド限定でスラッシュコマンドを即時同期する（開発・検証向け）。
+# 未指定なら全体同期（反映に最大1時間ほどかかることがある）。
+GUILD_ID = _read_int("MUNO_GUILD_ID", 0)
+
 BOT_NAME = os.getenv("MUNO_NAME", "ムノ")
 
 # メンションされていなくても、この確率でランダムに口を挟む（人工無能っぽさの肝）。
