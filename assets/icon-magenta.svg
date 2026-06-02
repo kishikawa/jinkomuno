@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#241624"/>
+      <stop offset="0.55" stop-color="#180c18"/>
+      <stop offset="1" stop-color="#100510"/>
+    </linearGradient>
+    <radialGradient id="screenGlow" cx="0.5" cy="0.42" r="0.75">
+      <stop offset="0" stop-color="#240b22"/>
+      <stop offset="1" stop-color="#110410"/>
+    </radialGradient>
+    <!-- 走査線（スキャンライン）パターンでCRTっぽさを出す -->
+    <pattern id="scan" width="6" height="6" patternUnits="userSpaceOnUse">
+      <rect width="6" height="6" fill="none"/>
+      <rect width="6" height="3" fill="#000000" opacity="0.18"/>
+    </pattern>
+  </defs>
+
+  <!-- 背景（角丸スクエア） -->
+  <rect x="0" y="0" width="512" height="512" rx="112" fill="url(#bg)"/>
+
+  <!-- モニタのベゼル -->
+  <rect x="74" y="92" width="364" height="312" rx="46" fill="#261327" stroke="#5e2c60" stroke-width="3"/>
+  <!-- 画面 -->
+  <rect x="100" y="116" width="312" height="264" rx="26" fill="url(#screenGlow)"/>
+
+  <!-- 顔。半目のジト目＋小馬鹿にした口元 -->
+  <g fill="#ff6fd8">
+    <g>
+      <path d="M150 214 q42 -8 84 0 v8 q-42 10 -84 0 z"/>
+      <circle cx="192" cy="232" r="17"/>
+    </g>
+    <g>
+      <path d="M278 214 q42 -8 84 0 v8 q-42 10 -84 0 z"/>
+      <circle cx="320" cy="232" r="17"/>
+    </g>
+  </g>
+
+  <!-- 口元：への字＋わずかな片側上げのスマーク -->
+  <path d="M196 312 q40 -22 80 -8 q22 8 44 -6"
+        fill="none" stroke="#ff6fd8" stroke-width="11" stroke-linecap="round"/>
+
+  <!-- プロンプト記号と点滅カーソル -->
+  <text x="132" y="356" font-family="'Courier New', monospace" font-size="34"
+        font-weight="bold" fill="#e64ab8">&gt;</text>
+  <rect x="158" y="332" width="22" height="30" rx="2" fill="#ff6fd8" opacity="0.9"/>
+
+  <!-- 「は？」吹き出し -->
+  <g>
+    <rect x="300" y="320" width="104" height="56" rx="16" fill="#ff6fd8"/>
+    <path d="M322 372 l-2 22 22 -16 z" fill="#ff6fd8"/>
+    <text x="352" y="358" text-anchor="middle"
+          font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans CJK JP','Yu Gothic',sans-serif"
+          font-size="34" font-weight="bold" fill="#2a0622">は？</text>
+  </g>
+
+  <!-- 走査線オーバーレイ -->
+  <rect x="100" y="116" width="312" height="264" rx="26" fill="url(#scan)"/>
+
+  <!-- 電源LED -->
+  <circle cx="256" cy="392" r="5" fill="#ff6fd8" opacity="0.8"/>
+</svg>

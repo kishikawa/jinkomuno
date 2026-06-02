@@ -76,6 +76,27 @@ python bot.py
 | `MUNO_RANDOM_REPLY_RATE` | 0.15 | メンション無しでも口を挟む確率 |
 | `MUNO_MARKOV_MIN_LEN` | 6 | これ未満の生成は LLM に助けを求める |
 
+## アイコン
+
+CRT ターミナル風のアプリアイコン（512×512 PNG）を `assets/` に同梱。
+フォスファー（蛍光体）の色違いを 5 パターン用意している。
+
+| ファイル | 配色 |
+|---|---|
+| `assets/icon-green.png` | フォスファーグリーン（既定。`icon.png` と同じ） |
+| `assets/icon-amber.png` | アンバー（当時の単色モニタ風） |
+| `assets/icon-red.png` | レッド（キレ度マシマシ） |
+| `assets/icon-cyan.png` | シアン |
+| `assets/icon-magenta.png` | マゼンタ |
+
+配色の調整・追加は `assets/make_icons.py` の `PALETTES` を編集して再生成する。
+
+```bash
+python assets/make_icons.py                    # SVG を生成
+# PNG へ変換（macOS / qlmanage の例）
+cd assets && qlmanage -t -s 512 -o . icon-green.svg && mv icon-green.svg.png icon-green.png
+```
+
 ## カスタマイズ
 
 - **口調を変える** → `data/seed_dictionary.json` の応答文と `brain/persona.py` の語尾リストを編集
